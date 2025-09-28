@@ -27,14 +27,9 @@ public class Ingresso {
         this.participante = participante;
     }
 
-    public boolean isUtilizado() {
-        return utilizado;
-    }
+    //TODO método para saber se ingresso já foi utilizado
 
-    public void registrarEntrada() {
-        this.utilizado = true;
-    }
-
+    //TODO método para registrar uma entrada
 
     @Override
     public String toString() {
