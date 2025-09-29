@@ -27,31 +27,30 @@ public class Ingresso {
         this.participante = participante;
     }
 
-    public boolean isUtilizado(){
+    public boolean isUtilizado() {
         return utilizado;
     }
 
-    public boolean registrarEntrada(){
-        if(utilizado){
-            System.out.println("Erro: Este ingresso já foi utilizado.");
-            return false;
-        }
-        if (participante==null){
-            System.out.println("Erro: Ingresso não possui um participante associado.");
-            return false;
+    public void registrarEntrada(){
+        if(!utilizado){
+            this.utilizado = true;
+            System.out.println("Entrada registrada para o ingresso " + codigo + ".");
+        }else{
+            System.out.println("Este ingresso ja foi utilizado.");
         }
 
-        utilizado = true;
-        System.out.println("Entrada registrada com sucesso para: " + participante.getNome());
-        return true;
     }
+
+    //TODO método para saber se ingresso já foi utilizado
+
+    //TODO método para registrar uma entrada
 
     @Override
     public String toString() {
         return "Ingresso{" +
                 "codigo='" + codigo + '\'' +
                 ", especial=" + especial +
-                ", participante=" + (participante != null ? participante.getNome() : "Não associado") +
+                //", participante=" + (participante != null ? participante.getNome() : "Não associado") +
                 ", utilizado=" + utilizado +
                 '}';
     }
