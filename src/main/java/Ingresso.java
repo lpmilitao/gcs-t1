@@ -27,7 +27,9 @@ public class Ingresso {
         this.participante = participante;
     }
 
-    //TODO método para saber se ingresso já foi utilizado
+    public boolean isUtilizado(){
+        return utilizado;
+    }
 
     //TODO método para registrar uma entrada
 
