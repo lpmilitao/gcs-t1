@@ -1,6 +1,7 @@
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -14,15 +15,38 @@ public class Operacao {
         this.input = new Scanner(System.in);
     }
 
-    public void executa(){
+    public void executa() {
         menu();
     }
 
-    private void menu(){
+    private void menu() {
         // TODO
+        int opcao = -1;
+
+        while (opcao != 0) {
+            System.out.println("--- MENU ---");
+            //listar opções
+            opcao = input.nextInt();
+            input.nextLine();
+
+            switch (opcao) {
+                case 1:
+                    cadastrarNovoEvento();
+                    break;
+                case 2:
+                    listarEventos();
+                    break;
+                case 3:
+                    procurarEventoPorNome();
+                    break;
+                default:
+                    System.out.println("Opção inválida.");
+                    break;
+            }
+        }
     }
 
-    private void cadastrarNovoEvento(){
+    private void cadastrarNovoEvento() {
         /* TODO
         O sistema deverá permitir ao operador cadastrar novos eventos.
         Deve-se validar que a data é futura (não se pode cadastrar um evento no dia atual ou no passado).
@@ -87,16 +111,31 @@ public class Operacao {
         this.eventos.add(evento);
     }
 
-    private void listarEventos(){
+    private void listarEventos() {
         // TODO
         // 3) O sistema deverá permitir ao operador listar todos os eventos
+        System.out.println("------ EVENTOS CADASTRADOS ------\n");
+        this.eventos.forEach(System.out::println);
     }
 
-    private void procurarEventoPorNome(){
+    private void procurarEventoPorNome() {
         //4) O sistema deverá permitir ao operador procurar por um evento específico (por parte do nome).
+        System.out.println("Digite o nome do evento a ser procurado: ");
+        String nome = input.nextLine();
+
+        Optional<Evento> evento = this.eventos.stream()
+                .filter(e -> e.getNomeEvento().equalsIgnoreCase(nome))
+                .findFirst();
+
+        if (evento.isEmpty()) {
+            System.out.println("Nenhum evento foi encontrado com o nome: " + nome);
+            return;
+        }
+
+        System.out.println(evento.get());
     }
 
-    private void consultarEvento(){
+    private void consultarEvento() {
         /* TODO
         7) O sistema deverá permitir ao operador consultar os detalhes de um evento específico, incluindo:
             a) Número total de ingressos disponíveis (lotação máxima)
@@ -106,7 +145,7 @@ public class Operacao {
          */
     }
 
-    private void emitirIngresso(){
+    private void emitirIngresso() {
         /* TODO
         5) Depois que o operador abrir os detalhes de um evento, poderá emitir ingressos
         (dentro do limite especificado na criação do evento)
@@ -117,7 +156,7 @@ public class Operacao {
          */
     }
 
-    private void registrarEntrada(){
+    private void registrarEntrada() {
         /*
         TODO
         6) O sistema deverá permitir ao operador (no dia do evento) registrar a entrada de cada participante
@@ -127,7 +166,7 @@ public class Operacao {
          */
     }
 
-    private void relatorioMensal(){
+    private void relatorioMensal() {
         /*
         TODO
         8) O sistema deverá permitir ao operador gerar um relatório geral por mês:

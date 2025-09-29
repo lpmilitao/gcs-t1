@@ -88,14 +88,13 @@ public class Evento {
         long valorArredondadocapacEsp = Math.round(quantidadeTotalIngressos * 0.15);
         int capEsp = (int) valorArredondadocapacEsp, capGer = quantidadeTotalIngressos - capEsp;
 
-        return "EVENTO NÚMERO: " + codigoUnico
-                + "\n--- " + nomeEvento + " ---" +
+        return "--- EVENTO [" + codigoUnico + "] " + nomeEvento + " ---" +
                 "\nDATA: " + date +
                 "\nVALOR INGRESSO: R$ " + valorIngresso +
                 "\nOFERECIDO POR: " + nomeResponsavel +
                 "\nLOTAÇÃO MÁXIMA: " + quantidadeTotalIngressos + " pessoas." +
                 "\nPÚBLICO GERAL: " + capGer + " ingressos." +
-                "\nCONDIÇÕES ESPECIAIS: " + capEsp + " ingressos.";
+                "\nCONDIÇÕES ESPECIAIS: " + capEsp + " ingressos.\n";
 
     }
 
