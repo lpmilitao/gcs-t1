@@ -25,7 +25,7 @@ public class Operacao {
 
         while (opcao != 0) {
             System.out.println("--- MENU ---");
-            //listar opções
+            menuInicial();
             opcao = input.nextInt();
             input.nextLine();
 
@@ -173,6 +173,10 @@ public class Operacao {
             a) Escolher mês e ano
             b) Mostar cada evento naquele mês e naquele ano, bem como estatísticas de cada evento.
          */
+    }
+
+    private void menuInicial() {
+        System.out.println("[1] Cadastrar novo evento \n[2] Listar eventos \n[3] Procurar evento por nome");
     }
 
 
