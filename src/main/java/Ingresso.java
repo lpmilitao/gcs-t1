@@ -27,6 +27,20 @@ public class Ingresso {
         this.participante = participante;
     }
 
+    public boolean isUtilizado() {
+        return utilizado;
+    }
+
+    public void registrarEntrada(){
+        if(!utilizado){
+            this.utilizado = true;
+            System.out.println("Entrada registrada para o ingresso " + codigo + ".");
+        }else{
+            System.out.println("Este ingresso ja foi utilizado.");
+        }
+
+    }
+
     //TODO método para saber se ingresso já foi utilizado
 
     //TODO método para registrar uma entrada
