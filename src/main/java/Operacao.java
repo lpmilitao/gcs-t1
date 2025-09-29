@@ -1,11 +1,17 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.regex.Pattern;
 
 public class Operacao {
 
     private ArrayList<Evento> eventos;
+    private final Scanner input;
 
     public Operacao() {
         this.eventos = new ArrayList<>();
+        this.input = new Scanner(System.in);
     }
 
     public void executa(){
@@ -33,6 +39,52 @@ public class Operacao {
             identificados como 121-001; 121-002; 121-003 ... até 121-074
             e mais os 15% especiais, identificados como 121-075E, 121-076E ... até 121-100E.
          */
+        Evento evento = new Evento();
+
+        System.out.println("Digite o código do Evento:");
+        evento.setCodigoUnico(input.nextInt());
+        input.nextLine();
+
+        System.out.println("Insira o nome do evento: ");
+        evento.setNomeEvento(input.nextLine());
+
+        boolean verif = false;
+        while (!verif) {
+            System.out.println("Insira a data do evento: ");
+            String data = input.nextLine();
+            if (Pattern.matches("[0-9]{2}[/]{1}[0-9]{2}[/]{1}[0-9]{4}", data)) {
+                DateTimeFormatter br = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                LocalDate date = LocalDate.parse(data, br);
+
+                if (LocalDate.now().isAfter(date)) {
+                    System.out.println("Erro: Insira uma data futura para o evento.");
+                } else if (LocalDate.now().isEqual(date)) {
+                    System.out.println("Erro: Insira uma data futura para o evento.");
+                } else {
+                    evento.setDataEvento(date);
+                    verif = true;
+                }
+            } else {
+                System.out.println("Erro: formato esperado: \"dd/MM/yyyy\"");
+            }
+        }
+
+        System.out.println("Insira o valor do ingresso: ");
+        double aux = input.nextDouble();
+        input.nextLine();
+
+        if (aux > 0.0) evento.setValorIngresso(aux);
+        else System.out.println("Erro: O valor não pode ser negativo, redefina o valor posteriormente");
+
+
+        System.out.println("Insira o nome do responsável pelo Evento:");
+        evento.setNomeResponsavel(input.nextLine());
+
+        System.out.println("Insira a capacidade máxima em número total de ingressos: ");
+        evento.setQuantidadeTotalIngressos(input.nextInt());
+        input.nextLine();
+
+        this.eventos.add(evento);
     }
 
     private void listarEventos(){

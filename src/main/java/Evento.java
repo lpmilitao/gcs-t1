@@ -29,24 +29,48 @@ public class Evento {
         return codigoUnico;
     }
 
+    public void setCodigoUnico(int codigoUnico) {
+        this.codigoUnico = codigoUnico;
+    }
+
     public String getNomeEvento() {
         return nomeEvento;
+    }
+
+    public void setNomeEvento(String nomeEvento) {
+        this.nomeEvento = nomeEvento;
     }
 
     public LocalDate getDataEvento() {
         return dataEvento;
     }
 
+    public void setDataEvento(LocalDate dataEvento) {
+        this.dataEvento = dataEvento;
+    }
+
     public double getValorIngresso() {
         return valorIngresso;
+    }
+
+    public void setValorIngresso(double valorIngresso) {
+        this.valorIngresso = valorIngresso;
     }
 
     public String getNomeResponsavel() {
         return nomeResponsavel;
     }
 
+    public void setNomeResponsavel(String nomeResponsavel) {
+        this.nomeResponsavel = nomeResponsavel;
+    }
+
     public int getQuantidadeTotalIngressos() {
         return quantidadeTotalIngressos;
+    }
+
+    public void setQuantidadeTotalIngressos(int quantidadeTotalIngressos) {
+        this.quantidadeTotalIngressos = quantidadeTotalIngressos;
     }
 
     public ArrayList<Ingresso> getIngressosGeral() {
@@ -55,10 +79,6 @@ public class Evento {
 
     public ArrayList<Ingresso> getIngressosEspeciais() {
         return ingressosEspeciais;
-    }
-
-    public void setValorIngresso(double valor) {
-        this.valorIngresso = valor;
     }
 
     @Override
@@ -79,49 +99,6 @@ public class Evento {
 
     }
 
-    public void preenche() {
-        Scanner input = new Scanner(System.in);
-        System.out.println("Digite o código do Evento:");
-        codigoUnico = input.nextInt();
-        input.nextLine();
-        System.out.println("Insira o nome do evento: ");
-        nomeEvento = input.nextLine();
-        boolean verif = false;
-        while (verif == false) {
-            System.out.println("Insira a data do evento: ");
-            String data = input.nextLine();
-            if (Pattern.matches("[0-9]{2}[/]{1}[0-9]{2}[/]{1}[0-9]{4}", data) == true) {
-                DateTimeFormatter br = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                LocalDate date = LocalDate.parse(data, br);
-                if (LocalDate.now().isAfter(date)) {
-                    verif = false;
-                    System.out.println("Erro: Insira uma data futura para o evento.");
-                } else if (LocalDate.now().isEqual(date)) {
-                    verif = false;
-                    System.out.println("Erro: Insira uma data futura para o evento.");
-                } else {
-                    dataEvento = date;
-                    verif = true;
-                }
-
-            } else {
-                System.out.println("Erro: formato esperado: \"dd/MM/yyyy\"");
-            }
-        }
-        System.out.println("Insira o valor do ingresso: ");
-        double aux = input.nextDouble();
-        input.nextLine();
-        if (aux > 0.0) {
-            valorIngresso = aux;
-        } else {
-            System.out.println("Erro: O valor não pode ser negativo, redefina o valor posteriormente");
-        }
-        System.out.println("Insira o nome do responsável pelo Evento:");
-        nomeResponsavel = input.nextLine();
-        System.out.println("Insira a capacidade máxima em número total de ingressos: ");
-        quantidadeTotalIngressos = input.nextInt();
-        input.nextLine();
-    }
 
     public void venderIngresso(Ingresso ing) {
         long valorArredondadocapacEsp = Math.round(quantidadeTotalIngressos * 0.15);
