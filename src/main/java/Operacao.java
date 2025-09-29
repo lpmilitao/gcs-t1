@@ -39,6 +39,12 @@ public class Operacao {
                 case 3:
                     procurarEventoPorNome();
                     break;
+                case 4:
+                    procurarEventoPorNome();
+                    break;
+                case 5:
+                    emitirIngresso();
+                    break;
                 default:
                     System.out.println("Opção inválida.");
                     break;
@@ -154,6 +160,57 @@ public class Operacao {
                 (1, 2, 3 etc e respeitando a quantidade de ingressos normais e especiais)
             c) Não poderão ser emitidos mais ingressos do que o limite do evento.
          */
+        int tipo = 0;
+        int cod = 0;
+        long valorArredondadoCapacEsp = 0;
+        int capEsp = 0;
+        int capGer = 0;
+        String idIngresso;
+        Ingresso ing;
+        System.out.println("Digite o codigo do evento: ");
+        cod = input.nextInt();
+        input.nextLine(); //limpa
+
+        Evento evento = null;
+        for(Evento e : eventos){
+            if(e.getCodigoUnico() == cod){
+                evento = e;
+                break;
+            }
+        }
+        if(evento == null){
+            System.out.println("Evento nao encontrado. ");
+            return;
+        }
+        System.out.println("Escolha o tio de ingresso: " + "\n" + "[1] - Publico Geral "+ "\n" + "[2] - Condicoes Esppeciais");
+        tipo = input.nextInt();
+        input.nextLine(); //limpa
+
+        valorArredondadoCapacEsp = Math.round(evento.getQuantidadeTotalIngressos() * 0.15);
+        capEsp = (int) valorArredondadoCapacEsp;
+        capGer = evento.getQuantidadeTotalIngressos() - capEsp;
+
+        if(tipo==1){
+            if(evento.getIngressosGeral().size()<capGer){
+                int numero = evento.getIngressosGeral().size()+1;
+                idIngresso = evento.getCodigoUnico() + "-" + numero; // id juntando o cod unico com numero
+                ing = new Ingresso(idIngresso, false);
+                evento.getIngressosGeral().add(ing);
+            }else{
+                System.out.println("Todos os ingressos de Publico Geral ja foram emitidos.");
+                return;
+            }
+        }else if(tipo ==2){
+            if(evento.getIngressosGeral().size()<capGer){
+                int numero = capGer + evento.getIngressosGeral().size()+1;
+                idIngresso = evento.getCodigoUnico() + "-" + numero + "E"; //E no final de especial
+                ing = new Ingresso(idIngresso, true);
+                evento.getIngressosEspeciais().add(ing);
+            }else{
+                System.out.println("Todos os ingressos Especiais a foram emitidos.");
+                return;
+            }
+        }
     }
 
     private void registrarEntrada() {
