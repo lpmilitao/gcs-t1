@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -44,6 +45,9 @@ public class Operacao {
                     break;
                 case 5:
                     emitirIngresso();
+                    break;
+                case 8:
+                    relatorioMensal();
                     break;
                 default:
                     System.out.println("Opção inválida.");
@@ -266,6 +270,26 @@ public class Operacao {
             a) Escolher mês e ano
             b) Mostar cada evento naquele mês e naquele ano, bem como estatísticas de cada evento.
          */
+
+        boolean verif = false;
+        while (!verif) {
+            System.out.println("Digite um mês e ano (MM/YYYY):");
+            String data = input.nextLine();
+            if (Pattern.matches("[0-9]{2}[/]{1}[0-9]{4}", data)) {
+                DateTimeFormatter br = DateTimeFormatter.ofPattern("MM/yyyy");
+                YearMonth ym = YearMonth.parse(data, br);
+                LocalDate dateInicial = ym.atDay(1);
+                LocalDate dateFinal = ym.atEndOfMonth();
+                verif = true;
+                System.out.println(dateInicial);
+                System.out.println(dateFinal);
+
+
+            } else {
+                System.out.println("Erro: formato esperado: \"dd/MM/yyyy\"");
+            }
+        }
+
     }
 
     private void menuInicial() {
