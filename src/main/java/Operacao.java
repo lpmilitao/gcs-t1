@@ -280,13 +280,28 @@ public class Operacao {
                 YearMonth ym = YearMonth.parse(data, br);
                 LocalDate dateInicial = ym.atDay(1);
                 LocalDate dateFinal = ym.atEndOfMonth();
-                verif = true;
-                System.out.println(dateInicial);
-                System.out.println(dateFinal);
 
+                if (LocalDate.now().isAfter(dateInicial)) {
+                    System.out.println("Erro: Insira uma data futura para ver o relatório.");
+                } else {
+                    verif = true;
+                }
 
+                boolean existe = false;
+                System.out.println("--- RELATÓRIO "+ ym +" ---");
+
+                for(Evento e: eventos) {
+                    if (e.getDataEvento().isBefore(dateFinal) && e.getDataEvento().isAfter(dateInicial)) {
+                        System.out.println(e);
+                        existe = true;
+                    }
+                }
+
+                if (!existe) {
+                    System.out.println("Nenhum evento encotrado nesse mês!");
+                }
             } else {
-                System.out.println("Erro: formato esperado: \"dd/MM/yyyy\"");
+                System.out.println("Erro: formato esperado: \"MM/yyyy\"");
             }
         }
 
