@@ -1,3 +1,5 @@
+import java.util.List;
+
 public class Participante {
     public String nome;
     public String cpf;
@@ -22,6 +24,15 @@ public class Participante {
 
     public String getCpf() {
         return cpf;
+    }
+
+    public static boolean cpfJaCadastrado(List<Participante> participantes, String cpf) {
+        for (Participante p : participantes) {
+            if (p.getCpf().equals(cpf)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
