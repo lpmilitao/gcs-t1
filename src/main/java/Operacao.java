@@ -214,13 +214,49 @@ public class Operacao {
     }
 
     private void registrarEntrada() {
-        /*
-        TODO
-        6) O sistema deverá permitir ao operador (no dia do evento) registrar a entrada de cada participante
-        mediante a apresentação do ingresso. Para cada participante, o sistema deverá registrar a presença,
-        de modo que posteriormente possamos saber quem esteve e quem não esteve no evento (o ingresso foi emitido,
-        mas o participante não compareceu).
-         */
+
+       // TODO
+                System.out.println("Digite o código do evento: ");
+        int cod = input.nextInt();
+        input.nextLine();
+
+        Evento evento = null;
+        for (Evento e : eventos) {
+            if (e.getCodigoUnico() == cod) {
+                evento = e;
+                break;
+            }
+        }
+        if (evento == null) {
+            System.out.println("Evento não encontrado.");
+            return;
+        }
+
+        System.out.println("Digite o código do ingresso: ");
+        String codigoIngresso = input.nextLine();
+
+        Ingresso ingressoEncontrado = null;
+        for (Ingresso ing : evento.getIngressosGeral()) {
+            if (ing.getCodigo().equals(codigoIngresso)) {
+                ingressoEncontrado = ing;
+                break;
+            }
+        }
+        if (ingressoEncontrado == null) {
+            for (Ingresso ing : evento.getIngressosEspeciais()) {
+                if (ing.getCodigo().equals(codigoIngresso)) {
+                    ingressoEncontrado = ing;
+                    break;
+                }
+            }
+        }
+
+        if (ingressoEncontrado == null) {
+            System.out.println("Ingresso não encontrado.");
+            return;
+        }
+
+        ingressoEncontrado.registrarEntrada();
     }
 
     private void relatorioMensal() {
