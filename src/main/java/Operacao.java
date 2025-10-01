@@ -164,63 +164,54 @@ public class Operacao {
                 (1, 2, 3 etc e respeitando a quantidade de ingressos normais e especiais)
             c) Não poderão ser emitidos mais ingressos do que o limite do evento.
          */
-        int tipo = 0;
-        int cod = 0;
-        long valorArredondadoCapacEsp = 0;
-        int capEsp = 0;
-        int capGer = 0;
+        int tipo, cod, capacidadeEspecial, capacidadeGeral; long valorArredondadoCapacEsp;
         String idIngresso;
-        Ingresso ing;
+
         System.out.println("Digite o codigo do evento: ");
         cod = input.nextInt();
         input.nextLine(); //limpa
 
-        Evento evento = null;
-        for(Evento e : eventos){
-            if(e.getCodigoUnico() == cod){
-                evento = e;
-                break;
-            }
-        }
-        if(evento == null){
+        Evento evento = getEventoById(cod);
+        if (evento == null) {
             System.out.println("Evento nao encontrado. ");
             return;
         }
-        System.out.println("Escolha o tio de ingresso: " + "\n" + "[1] - Publico Geral "+ "\n" + "[2] - Condicoes Esppeciais");
+
+        System.out.println("Escolha o tipo de ingresso: " + "\n" +
+                "[1] - Publico Geral " + "\n" +
+                "[2] - Condicoes Esppeciais");
         tipo = input.nextInt();
         input.nextLine(); //limpa
 
         valorArredondadoCapacEsp = Math.round(evento.getQuantidadeTotalIngressos() * 0.15);
-        capEsp = (int) valorArredondadoCapacEsp;
-        capGer = evento.getQuantidadeTotalIngressos() - capEsp;
+        capacidadeEspecial = (int) valorArredondadoCapacEsp;
+        capacidadeGeral = evento.getQuantidadeTotalIngressos() - capacidadeEspecial;
 
-        if(tipo==1){
-            if(evento.getIngressosGeral().size()<capGer){
-                int numero = evento.getIngressosGeral().size()+1;
-                idIngresso = evento.getCodigoUnico() + "-" + numero; // id juntando o cod unico com numero
-                ing = new Ingresso(idIngresso, false);
-                evento.getIngressosGeral().add(ing);
-            }else{
-                System.out.println("Todos os ingressos de Publico Geral ja foram emitidos.");
-                return;
-            }
-        }else if(tipo ==2){
-            if(evento.getIngressosGeral().size()<capGer){
-                int numero = capGer + evento.getIngressosGeral().size()+1;
+        if (tipo == 2) {
+            if (evento.getIngressosEspeciais().size() < capacidadeEspecial) {
+                int numero = capacidadeGeral + evento.getIngressosEspeciais().size() + 1;
                 idIngresso = evento.getCodigoUnico() + "-" + numero + "E"; //E no final de especial
-                ing = new Ingresso(idIngresso, true);
+                Ingresso ing = new Ingresso(idIngresso, true);
                 evento.getIngressosEspeciais().add(ing);
-            }else{
-                System.out.println("Todos os ingressos Especiais a foram emitidos.");
-                return;
+
+            } else {
+                System.out.println("Todos os ingressos especiais a foram emitidos.");
+            }
+
+        } else {
+            if (evento.getIngressosGeral().size() < capacidadeGeral) {
+                int numero = evento.getIngressosGeral().size() + 1;
+                idIngresso = evento.getCodigoUnico() + "-" + numero; // id juntando o cod unico com numero
+                Ingresso ing = new Ingresso(idIngresso, false);
+                evento.getIngressosGeral().add(ing);
+            } else {
+                System.out.println("Todos os ingressos de público geral ja foram emitidos.");
             }
         }
     }
 
     private void registrarEntrada() {
-
-       // TODO
-                System.out.println("Digite o código do evento: ");
+        System.out.println("Digite o código do evento: ");
         int cod = input.nextInt();
         input.nextLine();
 
@@ -264,13 +255,6 @@ public class Operacao {
     }
 
     private void relatorioMensal() {
-        /*
-        TODO
-        8) O sistema deverá permitir ao operador gerar um relatório geral por mês:
-            a) Escolher mês e ano
-            b) Mostar cada evento naquele mês e naquele ano, bem como estatísticas de cada evento.
-         */
-
         boolean verif = false;
         while (!verif) {
             System.out.println("Digite um mês e ano (MM/YYYY):");
@@ -288,9 +272,9 @@ public class Operacao {
                 }
 
                 boolean existe = false;
-                System.out.println("--- RELATÓRIO "+ ym +" ---");
+                System.out.println("--- RELATÓRIO " + ym + " ---");
 
-                for(Evento e: eventos) {
+                for (Evento e : eventos) {
                     if (e.getDataEvento().isBefore(dateFinal) && e.getDataEvento().isAfter(dateInicial)) {
                         System.out.println(e);
                         existe = true;
@@ -307,9 +291,13 @@ public class Operacao {
 
     }
 
+    private Evento getEventoById(int id){
+        return eventos.stream().filter(evento -> evento.getCodigoUnico() == id )
+                .findFirst()
+                .orElse(null);
+    }
+
     private void menuInicial() {
         System.out.println("[1] Cadastrar novo evento \n[2] Listar eventos \n[3] Procurar evento por nome");
     }
-
-
 }
