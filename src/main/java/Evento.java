@@ -102,33 +102,33 @@ public class Evento {
     public void venderIngresso(Ingresso ing) {
         long valorArredondadocapacEsp = Math.round(quantidadeTotalIngressos * 0.15);
         int capEsp = (int) valorArredondadocapacEsp, capGer = quantidadeTotalIngressos - capEsp;
-        //boolean esp = ing.getEspecial();// esperar implementação da classe ingresso
-        //if(esp == false){
-        if (ingressosGeral.size() <= capGer) {
-            ingressosGeral.add(ing);
-        } else {
-            System.out.println("Erro: não há mais ingressos disponíveis para essa categoria.");
+        boolean esp = ing.isEspecial();
+        if(!esp){
+            if (ingressosGeral.size() <= capGer) {
+                ingressosGeral.add(ing);
+            } else {
+                System.out.println("Erro: não há mais ingressos disponíveis para essa categoria.");
+            }
+        }else{
+            if (ingressosEspeciais.size() <= capEsp) {
+                 ingressosEspeciais.add(ing);
+            } else {
+                System.out.println("Erro: não há mais ingressos disponíveis para essa categoria.");
+            }
         }
-        // }else{
-        if (ingressosEspeciais.size() <= capEsp) {
-            ingressosEspeciais.add(ing);
-        } else {
-            System.out.println("Erro: não há mais ingressos disponíveis para essa categoria.");
-        }
-        //}
     }
 
     public void listarIngressos() {
         System.out.println("****** INGRESSOS ACESSO UNIVERSAL ******");
         for (int i = 0; i < ingressosGeral.size(); i++) {
             if (ingressosGeral.get(i) != null) {
-                //ingressosGeral.get(i).toStr();
+                System.out.println(ingressosGeral.get(i).toString());
             }
         }
         System.out.println("****** INGRESSOS CONDIÇÕES ESPECIAIS ******");
         for (int i = 0; i < ingressosEspeciais.size(); i++) {
             if (ingressosEspeciais.get(i) != null) {
-                //ingressosEspeciais.get(i).toStr();
+                System.out.println(ingressosEspeciais.get(i).toString());
             }
         }
     }
