@@ -25,6 +25,18 @@ public class Evento {
         this.ingressosEspeciais = new ArrayList<>();
     }
 
+    public Evento(int codigoUnico, String nomeEvento, LocalDate dataEvento, double valorIngresso,
+                  String nomeResponsavel, int quantidadeTotalIngressos) {
+        this.codigoUnico = codigoUnico;
+        this.nomeEvento = nomeEvento;
+        this.dataEvento = dataEvento;
+        this.valorIngresso = valorIngresso;
+        this.nomeResponsavel = nomeResponsavel;
+        this.quantidadeTotalIngressos = quantidadeTotalIngressos;
+        this.ingressosGeral = new ArrayList<>();
+        this.ingressosEspeciais = new ArrayList<>();
+    }
+
     public int getCodigoUnico() {
         return codigoUnico;
     }

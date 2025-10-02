@@ -9,11 +9,14 @@ import java.util.regex.Pattern;
 public class Operacao {
 
     private ArrayList<Evento> eventos;
+    private ArrayList<Participante> participantes;
     private final Scanner input;
 
     public Operacao() {
         this.eventos = new ArrayList<>();
+        this.participantes = new ArrayList<>();
         this.input = new Scanner(System.in);
+        inicializarDados();
     }
 
     public void executa() {
@@ -208,7 +211,12 @@ public class Operacao {
                     break;
                 case 4:
 //                    d) Percentual de ocupação total do evento (total de vendidos vs lotação máxima).
+                    int totalVendidos = evento.getQuantidadeIngressosVendidos(true)
+                            + evento.getQuantidadeIngressosVendidos(false);
+                    double percTotal = ((double) totalVendidos / evento.getQuantidadeTotalIngressos()) * 100;
 
+                    System.out.printf("De %d ingressos, %d foram vendidos, uma ocupação de %.2f%%\n",
+                            evento.getQuantidadeTotalIngressos(), totalVendidos, percTotal);
                     break;
                 default:
                     System.out.println("Opção inválida!");
@@ -349,5 +357,63 @@ public class Operacao {
 
     private void menuInicial() {
         System.out.println("[1] Cadastrar novo evento \n[2] Listar eventos \n[3] Procurar evento por nome");
+    }
+
+    private void inicializarDados() {
+        eventos.add(new Evento(111, "Show de Rock Internacional", LocalDate.of(2025, 11, 15),
+                250.0, "João Silva", 100));
+        eventos.add(new Evento(222, "Peça de Teatro Clássico", LocalDate.of(2025, 10, 22),
+                120.0, "Maria Oliveira", 80));
+        eventos.add(new Evento(333, "Palestra sobre IA", LocalDate.of(2025, 12, 5),
+                75.0, "Carlos Pereira", 30));
+        eventos.add(new Evento(444, "Festival de Comida de Rua", LocalDate.of(2026, 1, 20),
+                30.0, "Ana Souza", 20));
+        eventos.add(new Evento(555, "Pré-estreia de Filme", LocalDate.of(2025, 10, 10),
+                45.0, "CinePlus", 40));
+
+        participantes.add(new Participante("Adrian Fachi", "111.222.333-44"));
+        participantes.add(new Participante("Dougla Silvano", "222.333.444-55"));
+        participantes.add(new Participante("Ellen Miranda", "333.444.555-66"));
+        participantes.add(new Participante("Guilherme Royer", "444.555.666-77"));
+        participantes.add(new Participante("Julia Tietbohl", "555.666.777-88"));
+        participantes.add(new Participante("Lucas Henz", "666.777.888-99"));
+        participantes.add(new Participante("Raffaella Aranha", "777.888.999-00"));
+        participantes.add(new Participante("Ana Lech", "888.999.000-11"));
+        participantes.add(new Participante("Vicenzo Másera", "999.000.111-22"));
+        participantes.add(new Participante("Luiza Militão", "000.111.222-33"));
+
+        for (Evento e : eventos) {
+            for (int i = 0; i < participantes.size(); i++) {
+                boolean especial = (i % 2 == 0); // alterna especial/geral
+
+                Ingresso ingresso = getIngresso(e, especial, i);
+
+                if (especial) {
+                    e.getIngressosEspeciais().add(ingresso);
+                } else {
+                    e.getIngressosGeral().add(ingresso);
+                }
+            }
+
+
+        }
+    }
+
+    private Ingresso getIngresso(Evento e, boolean especial, int i) {
+        String codigoIngresso;
+        if (especial) {
+            int numero = e.getIngressosEspeciais().size() + 1;
+            codigoIngresso = e.getCodigoUnico() + "-" + numero + "E";
+        } else {
+            int numero = e.getIngressosGeral().size() + 1;
+            codigoIngresso = e.getCodigoUnico() + "-" + numero;
+        }
+
+        Ingresso ingresso = new Ingresso(
+                codigoIngresso,
+                especial,
+                participantes.get(i)
+        );
+        return ingresso;
     }
 }
