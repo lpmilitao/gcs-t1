@@ -55,6 +55,9 @@ public class Operacao {
                 case 7:
                     relatorioMensal();
                     break;
+                case 8:
+                    cancelaEvento();
+                    break;
                 default:
                     System.out.println("Opção inválida.");
                     break;
@@ -323,8 +326,8 @@ public class Operacao {
             if (Pattern.matches("[0-9]{2}[/]{1}[0-9]{4}", data)) {
                 DateTimeFormatter br = DateTimeFormatter.ofPattern("MM/yyyy");
                 YearMonth ym = YearMonth.parse(data, br);
-                LocalDate dateInicial = ym.atDay(1);
-                LocalDate dateFinal = ym.atEndOfMonth();
+                LocalDate dateInicial = ym.atDay(1).minusDays(1);
+                LocalDate dateFinal = ym.atEndOfMonth().plusDays(1);
 
                 if (LocalDate.now().isAfter(dateInicial)) {
                     System.out.println("Erro: Insira uma data futura para ver o relatório.");
@@ -349,7 +352,6 @@ public class Operacao {
                 System.out.println("Erro: formato esperado: \"MM/yyyy\"");
             }
         }
-
     }
 
     private Evento getEventoById(int id) {
@@ -358,8 +360,32 @@ public class Operacao {
                 .orElse(null);
     }
 
+    private void cancelaEvento() {
+        System.out.println("Digite o código do evento a ser cancelado: ");
+        int cod = input.nextInt();
+        input.nextLine(); // Limpa o buffer do scanner
+
+        Evento eventoParaCancelar = getEventoById(cod);
+
+        if (eventoParaCancelar == null) {
+            System.out.println("Evento com o código " + cod + " não encontrado.");
+            return;
+        }
+
+        System.out.println("\nConfirma o cancelamento do evento: "
+                + eventoParaCancelar.getNomeEvento() + " (" + cod + ")? (S/N)");
+        String confirmacao = input.nextLine();
+
+        if (confirmacao.equalsIgnoreCase("S")) {
+            this.eventos.remove(eventoParaCancelar);
+            System.out.println("Evento " + eventoParaCancelar.getNomeEvento() + " (código " + cod + ") cancelado com sucesso.");
+        } else {
+            System.out.println("Cancelamento do evento não concluido.");
+        }
+    }
+
     private void menuInicial() {
-        System.out.println("[1] Cadastrar novo evento \n[2] Listar eventos \n[3] Procurar evento por nome\n[4] Consultar evento\n[5] Emitir ingresso\n[6] Registrar entrada\n[7] Gerar relatório mensal\n\nOPÇÃO:");
+        System.out.println("[1] Cadastrar novo evento \n[2] Listar eventos \n[3] Procurar evento por nome\n[4] Consultar evento\n[5] Emitir ingresso\n[6] Registrar entrada\n[7] Gerar relatório mensal\n[8] Cancelar evento\n\nOPÇÃO:");
     }
 
     private void inicializarDados() {
