@@ -41,12 +41,15 @@ public class Operacao {
                     procurarEventoPorNome();
                     break;
                 case 4:
-                    procurarEventoPorNome();
+                    //TODO: consultar evento
                     break;
                 case 5:
                     emitirIngresso();
                     break;
-                case 8:
+                case 6:
+                    registrarEntrada();
+                    break;
+                case 7:
                     relatorioMensal();
                     break;
                 default:
@@ -308,7 +311,7 @@ public class Operacao {
     }
 
     private void menuInicial() {
-        System.out.println("[1] Cadastrar novo evento \n[2] Listar eventos \n[3] Procurar evento por nome");
+        System.out.println("[1] Cadastrar novo evento \n[2] Listar eventos \n[3] Procurar evento por nome\n[4] Consultar evento\n[5] Emitir ingresso\n[6] Registrar entrada\n[7] Gerar relatório mensal\n\nOPÇÃO:");
     }
 
 
