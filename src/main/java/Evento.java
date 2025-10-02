@@ -103,15 +103,15 @@ public class Evento {
         long valorArredondadocapacEsp = Math.round(quantidadeTotalIngressos * 0.15);
         int capEsp = (int) valorArredondadocapacEsp, capGer = quantidadeTotalIngressos - capEsp;
         boolean esp = ing.isEspecial();
-        if(!esp){
+        if (!esp) {
             if (ingressosGeral.size() <= capGer) {
                 ingressosGeral.add(ing);
             } else {
                 System.out.println("Erro: não há mais ingressos disponíveis para essa categoria.");
             }
-        }else{
+        } else {
             if (ingressosEspeciais.size() <= capEsp) {
-                 ingressosEspeciais.add(ing);
+                ingressosEspeciais.add(ing);
             } else {
                 System.out.println("Erro: não há mais ingressos disponíveis para essa categoria.");
             }
@@ -133,8 +133,34 @@ public class Evento {
         int capEsp = (int) valorArredondadocapacEsp, capGer = quantidadeTotalIngressos - capEsp;
 
         System.out.println("------DISPONÍVEIS------" +
-                "\nPublico Geral: restam " + (capGer - this.ingressosGeral.size()) + " ingressos." +
-                "\nCondições Especiais: restam " + (capEsp - this.ingressosEspeciais.size()) + " ingressos.");
+                "\nPublico Geral: restam " + getQuantidadeIngressosDisponiveis(false) + " ingressos." +
+                "\nCondições Especiais: restam " + getQuantidadeIngressosDisponiveis(true) + " ingressos.");
+    }
+
+    public int getQuantidadeIngressosDisponiveis(boolean isEspecial) {
+        long valorArredondadocapacEsp = Math.round(quantidadeTotalIngressos * 0.15);
+        int capEsp = (int) valorArredondadocapacEsp;
+        int capGer = quantidadeTotalIngressos - capEsp;
+
+        return isEspecial
+                ? capEsp - this.ingressosEspeciais.size()
+                : capGer - this.ingressosGeral.size();
+    }
+
+    public int getQuantidadeIngressosVendidos(boolean isEspecial) {
+        return isEspecial
+                ? this.ingressosEspeciais.size()
+                : this.ingressosGeral.size();
+    }
+
+    public int getCapacidadeIngressos(boolean isEspecial) {
+        long valorArredondadocapacEsp = Math.round(quantidadeTotalIngressos * 0.15);
+        int capEsp = (int) valorArredondadocapacEsp;
+        int capGer = quantidadeTotalIngressos - capEsp;
+
+        return isEspecial
+                ? capEsp
+                : capGer;
     }
 
     public int numIngressosVendidos() {

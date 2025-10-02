@@ -163,11 +163,11 @@ public class Operacao {
         while (opcao != 0) {
             System.out.println("=====" + evento.getCodigoUnico() + " | " + evento.getNomeEvento() + "=====");
             System.out.println("Escolha a o que você deseja consultar sobre esse evento:"
-            + "[0] Sair\n"
-            + "[1] Número total de ingressos disponíveis (lotação máxima)\n"
-            + "[2] Número de ingressos de cada tipo (normal e especial – 15%)\n"
-            + "[3] Número de ingressos vendidos de cada tipo e respectivos percentuais\n"
-            + "[4] Percentual de ocupação total do evento (total de vendidos vs lotação máxima)\n"
+                    + "[0] Sair\n"
+                    + "[1] Número total de ingressos disponíveis (lotação máxima)\n"
+                    + "[2] Número de ingressos de cada tipo (normal e especial – 15%)\n"
+                    + "[3] Número de ingressos vendidos de cada tipo e respectivos percentuais\n"
+                    + "[4] Percentual de ocupação total do evento (total de vendidos vs lotação máxima)\n"
             );
 
             opcao = input.nextInt();
@@ -181,13 +181,34 @@ public class Operacao {
                     break;
                 case 2:
 //                    b) Número de ingressos de cada tipo (normal e especial – 15%)
+                    System.out.println("Quantidade de ingressos para o público geral: "
+                            + evento.getCapacidadeIngressos(false));
 
+                    System.out.println("Quantidade de ingressos especiais: "
+                            + evento.getCapacidadeIngressos(true));
                     break;
                 case 3:
 //                    c) Número de ingressos vendidos de cada tipo e respectivos percentuais
+                    int vendidosGeral = evento.getQuantidadeIngressosVendidos(false);
+                    int vendidosEsp = evento.getQuantidadeIngressosVendidos(true);
+
+                    double porcGeral = ((double) vendidosGeral /
+                            (evento.getQuantidadeIngressosDisponiveis(false)
+                                    + evento.getQuantidadeIngressosVendidos(false))) * 100;
+
+                    double porcEsp = ((double) vendidosEsp /
+                            (evento.getQuantidadeIngressosDisponiveis(true)
+                                    + evento.getQuantidadeIngressosVendidos(true))) * 100;
+
+                    System.out.printf("Quantidade de ingressos para o público geral vendidos: %d %.2f%%\n",
+                            vendidosGeral, porcGeral);
+
+                    System.out.printf("Quantidade de ingressos especiais vendidos: %d %.2f%%\n",
+                            vendidosEsp, porcEsp);
                     break;
                 case 4:
 //                    d) Percentual de ocupação total do evento (total de vendidos vs lotação máxima).
+
                     break;
                 default:
                     System.out.println("Opção inválida!");
@@ -197,7 +218,8 @@ public class Operacao {
     }
 
     private void emitirIngresso() {
-        int tipo, cod, capacidadeEspecial, capacidadeGeral; long valorArredondadoCapacEsp;
+        int tipo, cod, capacidadeEspecial, capacidadeGeral;
+        long valorArredondadoCapacEsp;
         String idIngresso;
 
         System.out.println("Digite o codigo do evento: ");
@@ -319,8 +341,8 @@ public class Operacao {
 
     }
 
-    private Evento getEventoById(int id){
-        return eventos.stream().filter(evento -> evento.getCodigoUnico() == id )
+    private Evento getEventoById(int id) {
+        return eventos.stream().filter(evento -> evento.getCodigoUnico() == id)
                 .findFirst()
                 .orElse(null);
     }
