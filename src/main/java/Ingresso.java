@@ -5,13 +5,6 @@ public class Ingresso {
     private Participante participante;
     private boolean utilizado;
 
-    public Ingresso(String codigo, boolean especial) {
-        this.codigo = codigo;
-        this.especial = especial;
-        this.utilizado = false;
-        this.participante = null;
-    }
-
     public Ingresso(String codigo, boolean especial, Participante participante) {
         this.codigo = codigo;
         this.especial = especial;

@@ -11,12 +11,14 @@ public class Operacao {
     private ArrayList<Evento> eventos;
     private ArrayList<Participante> participantes;
     private final Scanner input;
+    private  ArrayList<Participante> participantesEspeciais;
 
     public Operacao() {
         this.eventos = new ArrayList<>();
         this.participantes = new ArrayList<>();
         this.input = new Scanner(System.in);
         inicializarDados();
+        this.participantesEspeciais = new ArrayList<>();
     }
 
     public void executa() {
@@ -24,7 +26,6 @@ public class Operacao {
     }
 
     private void menu() {
-        // TODO
         int opcao = -1;
 
         while (opcao != 0) {
@@ -44,7 +45,7 @@ public class Operacao {
                     procurarEventoPorNome();
                     break;
                 case 4:
-                    //TODO: consultar evento
+                    consultarEvento();
                     break;
                 case 5:
                     emitirIngresso();
@@ -57,6 +58,9 @@ public class Operacao {
                     break;
                 case 8:
                     cancelaEvento();
+                    break;
+                case 9:
+                    listarParticipantesEspeciais();
                     break;
                 default:
                     System.out.println("Opção inválida.");
@@ -248,7 +252,7 @@ public class Operacao {
 
         System.out.println("Escolha o tipo de ingresso:" +
                 "\n[1] - Publico Geral" +
-                "\n[2] - Condicoes Esppeciais");
+                "\n[2] - Condicoes Especiais");
         tipo = input.nextInt();
         input.nextLine(); //limpa
 
@@ -260,8 +264,14 @@ public class Operacao {
             if (evento.getIngressosEspeciais().size() < capacidadeEspecial) {
                 int numero = capacidadeGeral + evento.getIngressosEspeciais().size() + 1;
                 idIngresso = evento.getCodigoUnico() + "-" + numero + "E"; //E no final de especial
-                Ingresso ing = new Ingresso(idIngresso, true);
+                System.out.println("Digite o nome do participante: ");
+                String nome = input.nextLine();
+                System.out.println("Digite o cpf do participante: ");
+                String cpf = input.nextLine();
+                Participante novoParticipante = new Participante(nome, cpf);
+                Ingresso ing = new Ingresso(idIngresso, true, novoParticipante);
                 evento.getIngressosEspeciais().add(ing);
+                participantesEspeciais.add(novoParticipante);
 
             } else {
                 System.out.println("Todos os ingressos especiais a foram emitidos.");
@@ -271,7 +281,12 @@ public class Operacao {
             if (evento.getIngressosGeral().size() < capacidadeGeral) {
                 int numero = evento.getIngressosGeral().size() + 1;
                 idIngresso = evento.getCodigoUnico() + "-" + numero; // id juntando o cod unico com numero
-                Ingresso ing = new Ingresso(idIngresso, false);
+                System.out.println("Digite o nome do participante: ");
+                String nome = input.nextLine();
+                System.out.println("Digite o cpf do participante: ");
+                String cpf = input.nextLine();
+                Participante novoParticipante = new Participante(nome, cpf);
+                Ingresso ing = new Ingresso(idIngresso, false, novoParticipante);
                 evento.getIngressosGeral().add(ing);
             } else {
                 System.out.println("Todos os ingressos de público geral ja foram emitidos.");
@@ -384,8 +399,18 @@ public class Operacao {
         }
     }
 
+    private void listarParticipantesEspeciais() {
+
+            if(participantesEspeciais.isEmpty())
+                System.out.println("Não há dados na lista.");
+            for (Participante participantes : participantesEspeciais) {
+                System.out.println(participantes.getNome());
+            }
+
+    }
+
     private void menuInicial() {
-        System.out.println("[1] Cadastrar novo evento \n[2] Listar eventos \n[3] Procurar evento por nome\n[4] Consultar evento\n[5] Emitir ingresso\n[6] Registrar entrada\n[7] Gerar relatório mensal\n[8] Cancelar evento\n\nOPÇÃO:");
+        System.out.println("[1] Cadastrar novo evento \n[2] Listar eventos \n[3] Procurar evento por nome\n[4] Consultar evento\n[5] Emitir ingresso\n[6] Registrar entrada\n[7] Gerar relatório mensal\n[8] Cancelar evento\n[9] Listar participantes especiais\n\nOPÇÃO:");
     }
 
     private void inicializarDados() {
@@ -410,6 +435,7 @@ public class Operacao {
         participantes.add(new Participante("Ana Lech", "888.999.000-11"));
         participantes.add(new Participante("Vicenzo Másera", "999.000.111-22"));
         participantes.add(new Participante("Luiza Militão", "000.111.222-33"));
+
 
         for (Evento e : eventos) {
             for (int i = 0; i < participantes.size(); i++) {
