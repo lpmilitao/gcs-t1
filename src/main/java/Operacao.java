@@ -146,24 +146,57 @@ public class Operacao {
     }
 
     private void consultarEvento() {
-        /* TODO
-        7) O sistema deverá permitir ao operador consultar os detalhes de um evento específico, incluindo:
-            a) Número total de ingressos disponíveis (lotação máxima)
-            b) Número de ingressos de cada tipo (normal e especial – 15%)
-            c) Número de ingressos vendidos de cada tipo e respectivos percentuais
-            d) Percentual de ocupação total do evento (total de vendidos vs lotação máxima).
-         */
+        int cod;
+
+        System.out.println("Digite o codigo do evento: ");
+        cod = input.nextInt();
+        input.nextLine(); //limpa
+
+        Evento evento = getEventoById(cod);
+        if (evento == null) {
+            System.out.println("Evento nao encontrado. ");
+            return;
+        }
+
+        int opcao = -1;
+
+        while (opcao != 0) {
+            System.out.println("=====" + evento.getCodigoUnico() + " | " + evento.getNomeEvento() + "=====");
+            System.out.println("Escolha a o que você deseja consultar sobre esse evento:"
+            + "[0] Sair\n"
+            + "[1] Número total de ingressos disponíveis (lotação máxima)\n"
+            + "[2] Número de ingressos de cada tipo (normal e especial – 15%)\n"
+            + "[3] Número de ingressos vendidos de cada tipo e respectivos percentuais\n"
+            + "[4] Percentual de ocupação total do evento (total de vendidos vs lotação máxima)\n"
+            );
+
+            opcao = input.nextInt();
+            input.nextLine(); //limpa
+
+            switch (opcao) {
+                case 1:
+//                    a) Número total de ingressos disponíveis (lotação máxima)
+                    System.out.println("O número total de ingressos disponíveis é "
+                            + evento.getQuantidadeTotalIngressos());
+                    break;
+                case 2:
+//                    b) Número de ingressos de cada tipo (normal e especial – 15%)
+
+                    break;
+                case 3:
+//                    c) Número de ingressos vendidos de cada tipo e respectivos percentuais
+                    break;
+                case 4:
+//                    d) Percentual de ocupação total do evento (total de vendidos vs lotação máxima).
+                    break;
+                default:
+                    System.out.println("Opção inválida!");
+                    break;
+            }
+        }
     }
 
     private void emitirIngresso() {
-        /* TODO
-        5) Depois que o operador abrir os detalhes de um evento, poderá emitir ingressos
-        (dentro do limite especificado na criação do evento)
-            a) O operador deverá indicar o tipo de ingresso (normal ou especial)
-            b) Os ingressos deverão ser emitidos sequencialmente
-                (1, 2, 3 etc e respeitando a quantidade de ingressos normais e especiais)
-            c) Não poderão ser emitidos mais ingressos do que o limite do evento.
-         */
         int tipo, cod, capacidadeEspecial, capacidadeGeral; long valorArredondadoCapacEsp;
         String idIngresso;
 
@@ -177,9 +210,9 @@ public class Operacao {
             return;
         }
 
-        System.out.println("Escolha o tipo de ingresso: " + "\n" +
-                "[1] - Publico Geral " + "\n" +
-                "[2] - Condicoes Esppeciais");
+        System.out.println("Escolha o tipo de ingresso:" +
+                "\n[1] - Publico Geral" +
+                "\n[2] - Condicoes Esppeciais");
         tipo = input.nextInt();
         input.nextLine(); //limpa
 
@@ -215,13 +248,8 @@ public class Operacao {
         int cod = input.nextInt();
         input.nextLine();
 
-        Evento evento = null;
-        for (Evento e : eventos) {
-            if (e.getCodigoUnico() == cod) {
-                evento = e;
-                break;
-            }
-        }
+        Evento evento = getEventoById(cod);
+
         if (evento == null) {
             System.out.println("Evento não encontrado.");
             return;

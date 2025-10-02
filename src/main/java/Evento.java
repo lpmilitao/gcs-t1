@@ -118,53 +118,26 @@ public class Evento {
         }
     }
 
-    public void listarIngressos() {
+    public void listarIngressosGerais() {
         System.out.println("****** INGRESSOS ACESSO UNIVERSAL ******");
-        for (int i = 0; i < ingressosGeral.size(); i++) {
-            if (ingressosGeral.get(i) != null) {
-                System.out.println(ingressosGeral.get(i).toString());
-            }
-        }
+        this.ingressosGeral.forEach(System.out::println);
+    }
+
+    public void listarIngressosEspeciais() {
         System.out.println("****** INGRESSOS CONDIÇÕES ESPECIAIS ******");
-        for (int i = 0; i < ingressosEspeciais.size(); i++) {
-            if (ingressosEspeciais.get(i) != null) {
-                System.out.println(ingressosEspeciais.get(i).toString());
-            }
-        }
+        this.ingressosEspeciais.forEach(System.out::println);
     }
 
     public void listarIngressosDisponiveis() {
         long valorArredondadocapacEsp = Math.round(quantidadeTotalIngressos * 0.15);
         int capEsp = (int) valorArredondadocapacEsp, capGer = quantidadeTotalIngressos - capEsp;
-        int contG = 0, contE = 0;
-        for (int i = 0; i < ingressosGeral.size(); i++) {
-            if (ingressosGeral.get(i) != null) {
-                contG++;
-            }
-        }
-        for (int i = 0; i < ingressosEspeciais.size(); i++) {
-            if (ingressosEspeciais.get(i) != null) {
-                contE++;
-            }
-        }
-        System.out.println("------DISPONÍVEIS------" +
-                "\nPublico Geral: restam " + (capGer - contG) + " ingressos." +
-                "\nCondições Especiais: restam " + (capEsp - contE) + " ingressos.");
 
+        System.out.println("------DISPONÍVEIS------" +
+                "\nPublico Geral: restam " + (capGer - this.ingressosGeral.size()) + " ingressos." +
+                "\nCondições Especiais: restam " + (capEsp - this.ingressosEspeciais.size()) + " ingressos.");
     }
 
     public int numIngressosVendidos() {
-        int cont = 0;
-        for (int i = 0; i < ingressosGeral.size(); i++) {
-            if (ingressosGeral.get(i) != null) {
-                cont++;
-            }
-        }
-        for (int i = 0; i < ingressosEspeciais.size(); i++) {
-            if (ingressosEspeciais.get(i) != null) {
-                cont++;
-            }
-        }
-        return cont;
+        return this.ingressosEspeciais.size() + this.ingressosGeral.size();
     }
 }
