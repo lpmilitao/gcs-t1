@@ -9,11 +9,14 @@ import java.util.regex.Pattern;
 public class Operacao {
 
     private ArrayList<Evento> eventos;
+    private ArrayList<Participante> participantes;
     private final Scanner input;
 
     public Operacao() {
         this.eventos = new ArrayList<>();
+        this.participantes = new ArrayList<>();
         this.input = new Scanner(System.in);
+        inicializarDados();
     }
 
     public void executa() {
@@ -149,91 +152,137 @@ public class Operacao {
     }
 
     private void consultarEvento() {
-        /* TODO
-        7) O sistema deverá permitir ao operador consultar os detalhes de um evento específico, incluindo:
-            a) Número total de ingressos disponíveis (lotação máxima)
-            b) Número de ingressos de cada tipo (normal e especial – 15%)
-            c) Número de ingressos vendidos de cada tipo e respectivos percentuais
-            d) Percentual de ocupação total do evento (total de vendidos vs lotação máxima).
-         */
-    }
+        int cod;
 
-    private void emitirIngresso() {
-        /* TODO
-        5) Depois que o operador abrir os detalhes de um evento, poderá emitir ingressos
-        (dentro do limite especificado na criação do evento)
-            a) O operador deverá indicar o tipo de ingresso (normal ou especial)
-            b) Os ingressos deverão ser emitidos sequencialmente
-                (1, 2, 3 etc e respeitando a quantidade de ingressos normais e especiais)
-            c) Não poderão ser emitidos mais ingressos do que o limite do evento.
-         */
-        int tipo = 0;
-        int cod = 0;
-        long valorArredondadoCapacEsp = 0;
-        int capEsp = 0;
-        int capGer = 0;
-        String idIngresso;
-        Ingresso ing;
         System.out.println("Digite o codigo do evento: ");
         cod = input.nextInt();
         input.nextLine(); //limpa
 
-        Evento evento = null;
-        for(Evento e : eventos){
-            if(e.getCodigoUnico() == cod){
-                evento = e;
-                break;
-            }
-        }
-        if(evento == null){
+        Evento evento = getEventoById(cod);
+        if (evento == null) {
             System.out.println("Evento nao encontrado. ");
             return;
         }
-        System.out.println("Escolha o tio de ingresso: " + "\n" + "[1] - Publico Geral "+ "\n" + "[2] - Condicoes Esppeciais");
+
+        int opcao = -1;
+
+        while (opcao != 0) {
+            System.out.println("=====" + evento.getCodigoUnico() + " | " + evento.getNomeEvento() + "=====");
+            System.out.println("Escolha a o que você deseja consultar sobre esse evento:"
+                    + "[0] Sair\n"
+                    + "[1] Número total de ingressos disponíveis (lotação máxima)\n"
+                    + "[2] Número de ingressos de cada tipo (normal e especial – 15%)\n"
+                    + "[3] Número de ingressos vendidos de cada tipo e respectivos percentuais\n"
+                    + "[4] Percentual de ocupação total do evento (total de vendidos vs lotação máxima)\n"
+            );
+
+            opcao = input.nextInt();
+            input.nextLine(); //limpa
+
+            switch (opcao) {
+                case 1:
+//                    a) Número total de ingressos disponíveis (lotação máxima)
+                    System.out.println("O número total de ingressos disponíveis é "
+                            + evento.getQuantidadeTotalIngressos());
+                    break;
+                case 2:
+//                    b) Número de ingressos de cada tipo (normal e especial – 15%)
+                    System.out.println("Quantidade de ingressos para o público geral: "
+                            + evento.getCapacidadeIngressos(false));
+
+                    System.out.println("Quantidade de ingressos especiais: "
+                            + evento.getCapacidadeIngressos(true));
+                    break;
+                case 3:
+//                    c) Número de ingressos vendidos de cada tipo e respectivos percentuais
+                    int vendidosGeral = evento.getQuantidadeIngressosVendidos(false);
+                    int vendidosEsp = evento.getQuantidadeIngressosVendidos(true);
+
+                    double porcGeral = ((double) vendidosGeral /
+                            (evento.getQuantidadeIngressosDisponiveis(false)
+                                    + evento.getQuantidadeIngressosVendidos(false))) * 100;
+
+                    double porcEsp = ((double) vendidosEsp /
+                            (evento.getQuantidadeIngressosDisponiveis(true)
+                                    + evento.getQuantidadeIngressosVendidos(true))) * 100;
+
+                    System.out.printf("Quantidade de ingressos para o público geral vendidos: %d %.2f%%\n",
+                            vendidosGeral, porcGeral);
+
+                    System.out.printf("Quantidade de ingressos especiais vendidos: %d %.2f%%\n",
+                            vendidosEsp, porcEsp);
+                    break;
+                case 4:
+//                    d) Percentual de ocupação total do evento (total de vendidos vs lotação máxima).
+                    int totalVendidos = evento.getQuantidadeIngressosVendidos(true)
+                            + evento.getQuantidadeIngressosVendidos(false);
+                    double percTotal = ((double) totalVendidos / evento.getQuantidadeTotalIngressos()) * 100;
+
+                    System.out.printf("De %d ingressos, %d foram vendidos, uma ocupação de %.2f%%\n",
+                            evento.getQuantidadeTotalIngressos(), totalVendidos, percTotal);
+                    break;
+                default:
+                    System.out.println("Opção inválida!");
+                    break;
+            }
+        }
+    }
+
+    private void emitirIngresso() {
+        int tipo, cod, capacidadeEspecial, capacidadeGeral;
+        long valorArredondadoCapacEsp;
+        String idIngresso;
+
+        System.out.println("Digite o codigo do evento: ");
+        cod = input.nextInt();
+        input.nextLine(); //limpa
+
+        Evento evento = getEventoById(cod);
+        if (evento == null) {
+            System.out.println("Evento nao encontrado. ");
+            return;
+        }
+
+        System.out.println("Escolha o tipo de ingresso:" +
+                "\n[1] - Publico Geral" +
+                "\n[2] - Condicoes Esppeciais");
         tipo = input.nextInt();
         input.nextLine(); //limpa
 
         valorArredondadoCapacEsp = Math.round(evento.getQuantidadeTotalIngressos() * 0.15);
-        capEsp = (int) valorArredondadoCapacEsp;
-        capGer = evento.getQuantidadeTotalIngressos() - capEsp;
+        capacidadeEspecial = (int) valorArredondadoCapacEsp;
+        capacidadeGeral = evento.getQuantidadeTotalIngressos() - capacidadeEspecial;
 
-        if(tipo==1){
-            if(evento.getIngressosGeral().size()<capGer){
-                int numero = evento.getIngressosGeral().size()+1;
-                idIngresso = evento.getCodigoUnico() + "-" + numero; // id juntando o cod unico com numero
-                ing = new Ingresso(idIngresso, false);
-                evento.getIngressosGeral().add(ing);
-            }else{
-                System.out.println("Todos os ingressos de Publico Geral ja foram emitidos.");
-                return;
-            }
-        }else if(tipo ==2){
-            if(evento.getIngressosGeral().size()<capGer){
-                int numero = capGer + evento.getIngressosGeral().size()+1;
+        if (tipo == 2) {
+            if (evento.getIngressosEspeciais().size() < capacidadeEspecial) {
+                int numero = capacidadeGeral + evento.getIngressosEspeciais().size() + 1;
                 idIngresso = evento.getCodigoUnico() + "-" + numero + "E"; //E no final de especial
-                ing = new Ingresso(idIngresso, true);
+                Ingresso ing = new Ingresso(idIngresso, true);
                 evento.getIngressosEspeciais().add(ing);
-            }else{
-                System.out.println("Todos os ingressos Especiais a foram emitidos.");
-                return;
+
+            } else {
+                System.out.println("Todos os ingressos especiais a foram emitidos.");
+            }
+
+        } else {
+            if (evento.getIngressosGeral().size() < capacidadeGeral) {
+                int numero = evento.getIngressosGeral().size() + 1;
+                idIngresso = evento.getCodigoUnico() + "-" + numero; // id juntando o cod unico com numero
+                Ingresso ing = new Ingresso(idIngresso, false);
+                evento.getIngressosGeral().add(ing);
+            } else {
+                System.out.println("Todos os ingressos de público geral ja foram emitidos.");
             }
         }
     }
 
     private void registrarEntrada() {
-
-       // TODO
-                System.out.println("Digite o código do evento: ");
+        System.out.println("Digite o código do evento: ");
         int cod = input.nextInt();
         input.nextLine();
 
-        Evento evento = null;
-        for (Evento e : eventos) {
-            if (e.getCodigoUnico() == cod) {
-                evento = e;
-                break;
-            }
-        }
+        Evento evento = getEventoById(cod);
+
         if (evento == null) {
             System.out.println("Evento não encontrado.");
             return;
@@ -267,13 +316,6 @@ public class Operacao {
     }
 
     private void relatorioMensal() {
-        /*
-        TODO
-        8) O sistema deverá permitir ao operador gerar um relatório geral por mês:
-            a) Escolher mês e ano
-            b) Mostar cada evento naquele mês e naquele ano, bem como estatísticas de cada evento.
-         */
-
         boolean verif = false;
         while (!verif) {
             System.out.println("Digite um mês e ano (MM/YYYY):");
@@ -291,9 +333,9 @@ public class Operacao {
                 }
 
                 boolean existe = false;
-                System.out.println("--- RELATÓRIO "+ ym +" ---");
+                System.out.println("--- RELATÓRIO " + ym + " ---");
 
-                for(Evento e: eventos) {
+                for (Evento e : eventos) {
                     if (e.getDataEvento().isBefore(dateFinal) && e.getDataEvento().isAfter(dateInicial)) {
                         System.out.println(e);
                         existe = true;
@@ -310,9 +352,71 @@ public class Operacao {
 
     }
 
+    private Evento getEventoById(int id) {
+        return eventos.stream().filter(evento -> evento.getCodigoUnico() == id)
+                .findFirst()
+                .orElse(null);
+    }
+
     private void menuInicial() {
         System.out.println("[1] Cadastrar novo evento \n[2] Listar eventos \n[3] Procurar evento por nome\n[4] Consultar evento\n[5] Emitir ingresso\n[6] Registrar entrada\n[7] Gerar relatório mensal\n\nOPÇÃO:");
     }
 
+    private void inicializarDados() {
+        eventos.add(new Evento(111, "Show de Rock Internacional", LocalDate.of(2025, 11, 15),
+                250.0, "João Silva", 100));
+        eventos.add(new Evento(222, "Peça de Teatro Clássico", LocalDate.of(2025, 10, 22),
+                120.0, "Maria Oliveira", 80));
+        eventos.add(new Evento(333, "Palestra sobre IA", LocalDate.of(2025, 12, 5),
+                75.0, "Carlos Pereira", 30));
+        eventos.add(new Evento(444, "Festival de Comida de Rua", LocalDate.of(2026, 1, 20),
+                30.0, "Ana Souza", 20));
+        eventos.add(new Evento(555, "Pré-estreia de Filme", LocalDate.of(2025, 10, 10),
+                45.0, "CinePlus", 40));
 
+        participantes.add(new Participante("Adrian Fachi", "111.222.333-44"));
+        participantes.add(new Participante("Dougla Silvano", "222.333.444-55"));
+        participantes.add(new Participante("Ellen Miranda", "333.444.555-66"));
+        participantes.add(new Participante("Guilherme Royer", "444.555.666-77"));
+        participantes.add(new Participante("Julia Tietbohl", "555.666.777-88"));
+        participantes.add(new Participante("Lucas Henz", "666.777.888-99"));
+        participantes.add(new Participante("Raffaella Aranha", "777.888.999-00"));
+        participantes.add(new Participante("Ana Lech", "888.999.000-11"));
+        participantes.add(new Participante("Vicenzo Másera", "999.000.111-22"));
+        participantes.add(new Participante("Luiza Militão", "000.111.222-33"));
+
+        for (Evento e : eventos) {
+            for (int i = 0; i < participantes.size(); i++) {
+                boolean especial = (i % 2 == 0); // alterna especial/geral
+
+                Ingresso ingresso = getIngresso(e, especial, i);
+
+                if (especial) {
+                    e.getIngressosEspeciais().add(ingresso);
+                } else {
+                    e.getIngressosGeral().add(ingresso);
+                }
+            }
+
+
+        }
+    }
+
+    private Ingresso getIngresso(Evento e, boolean especial, int i) {
+        String codigoIngresso;
+        if (especial) {
+            int numero = e.getIngressosEspeciais().size() + 1;
+            codigoIngresso = e.getCodigoUnico() + "-" + numero + "E";
+        } else {
+            int numero = e.getIngressosGeral().size() + 1;
+            codigoIngresso = e.getCodigoUnico() + "-" + numero;
+        }
+
+        Ingresso ingresso = new Ingresso(
+                codigoIngresso,
+                especial,
+                participantes.get(i)
+        );
+        return ingresso;
+    }
 }

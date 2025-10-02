@@ -25,6 +25,18 @@ public class Evento {
         this.ingressosEspeciais = new ArrayList<>();
     }
 
+    public Evento(int codigoUnico, String nomeEvento, LocalDate dataEvento, double valorIngresso,
+                  String nomeResponsavel, int quantidadeTotalIngressos) {
+        this.codigoUnico = codigoUnico;
+        this.nomeEvento = nomeEvento;
+        this.dataEvento = dataEvento;
+        this.valorIngresso = valorIngresso;
+        this.nomeResponsavel = nomeResponsavel;
+        this.quantidadeTotalIngressos = quantidadeTotalIngressos;
+        this.ingressosGeral = new ArrayList<>();
+        this.ingressosEspeciais = new ArrayList<>();
+    }
+
     public int getCodigoUnico() {
         return codigoUnico;
     }
@@ -103,68 +115,67 @@ public class Evento {
         long valorArredondadocapacEsp = Math.round(quantidadeTotalIngressos * 0.15);
         int capEsp = (int) valorArredondadocapacEsp, capGer = quantidadeTotalIngressos - capEsp;
         boolean esp = ing.isEspecial();
-        if(!esp){
+        if (!esp) {
             if (ingressosGeral.size() <= capGer) {
                 ingressosGeral.add(ing);
             } else {
                 System.out.println("Erro: não há mais ingressos disponíveis para essa categoria.");
             }
-        }else{
+        } else {
             if (ingressosEspeciais.size() <= capEsp) {
-                 ingressosEspeciais.add(ing);
+                ingressosEspeciais.add(ing);
             } else {
                 System.out.println("Erro: não há mais ingressos disponíveis para essa categoria.");
             }
         }
     }
 
-    public void listarIngressos() {
+    public void listarIngressosGerais() {
         System.out.println("****** INGRESSOS ACESSO UNIVERSAL ******");
-        for (int i = 0; i < ingressosGeral.size(); i++) {
-            if (ingressosGeral.get(i) != null) {
-                System.out.println(ingressosGeral.get(i).toString());
-            }
-        }
+        this.ingressosGeral.forEach(System.out::println);
+    }
+
+    public void listarIngressosEspeciais() {
         System.out.println("****** INGRESSOS CONDIÇÕES ESPECIAIS ******");
-        for (int i = 0; i < ingressosEspeciais.size(); i++) {
-            if (ingressosEspeciais.get(i) != null) {
-                System.out.println(ingressosEspeciais.get(i).toString());
-            }
-        }
+        this.ingressosEspeciais.forEach(System.out::println);
     }
 
     public void listarIngressosDisponiveis() {
         long valorArredondadocapacEsp = Math.round(quantidadeTotalIngressos * 0.15);
         int capEsp = (int) valorArredondadocapacEsp, capGer = quantidadeTotalIngressos - capEsp;
-        int contG = 0, contE = 0;
-        for (int i = 0; i < ingressosGeral.size(); i++) {
-            if (ingressosGeral.get(i) != null) {
-                contG++;
-            }
-        }
-        for (int i = 0; i < ingressosEspeciais.size(); i++) {
-            if (ingressosEspeciais.get(i) != null) {
-                contE++;
-            }
-        }
-        System.out.println("------DISPONÍVEIS------" +
-                "\nPublico Geral: restam " + (capGer - contG) + " ingressos." +
-                "\nCondições Especiais: restam " + (capEsp - contE) + " ingressos.");
 
+        System.out.println("------DISPONÍVEIS------" +
+                "\nPublico Geral: restam " + getQuantidadeIngressosDisponiveis(false) + " ingressos." +
+                "\nCondições Especiais: restam " + getQuantidadeIngressosDisponiveis(true) + " ingressos.");
+    }
+
+    public int getQuantidadeIngressosDisponiveis(boolean isEspecial) {
+        long valorArredondadocapacEsp = Math.round(quantidadeTotalIngressos * 0.15);
+        int capEsp = (int) valorArredondadocapacEsp;
+        int capGer = quantidadeTotalIngressos - capEsp;
+
+        return isEspecial
+                ? capEsp - this.ingressosEspeciais.size()
+                : capGer - this.ingressosGeral.size();
+    }
+
+    public int getQuantidadeIngressosVendidos(boolean isEspecial) {
+        return isEspecial
+                ? this.ingressosEspeciais.size()
+                : this.ingressosGeral.size();
+    }
+
+    public int getCapacidadeIngressos(boolean isEspecial) {
+        long valorArredondadocapacEsp = Math.round(quantidadeTotalIngressos * 0.15);
+        int capEsp = (int) valorArredondadocapacEsp;
+        int capGer = quantidadeTotalIngressos - capEsp;
+
+        return isEspecial
+                ? capEsp
+                : capGer;
     }
 
     public int numIngressosVendidos() {
-        int cont = 0;
-        for (int i = 0; i < ingressosGeral.size(); i++) {
-            if (ingressosGeral.get(i) != null) {
-                cont++;
-            }
-        }
-        for (int i = 0; i < ingressosEspeciais.size(); i++) {
-            if (ingressosEspeciais.get(i) != null) {
-                cont++;
-            }
-        }
-        return cont;
+        return this.ingressosEspeciais.size() + this.ingressosGeral.size();
     }
 }
