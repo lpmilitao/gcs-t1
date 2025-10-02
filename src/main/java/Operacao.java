@@ -11,7 +11,7 @@ public class Operacao {
     private ArrayList<Evento> eventos;
     private ArrayList<Participante> participantes;
     private final Scanner input;
-    private  ArrayList<Participante> participantesEspeciais;
+    private ArrayList<Participante> participantesEspeciais;
 
     public Operacao() {
         this.eventos = new ArrayList<>();
@@ -400,12 +400,12 @@ public class Operacao {
     }
 
     private void listarParticipantesEspeciais() {
-
-            if(participantesEspeciais.isEmpty())
-                System.out.println("Não há dados na lista.");
-            for (Participante participantes : participantesEspeciais) {
-                System.out.println(participantes.getNome());
-            }
+        if (participantesEspeciais.isEmpty())
+            System.out.println("Não há dados na lista.");
+        System.out.println("LISTA DE PARTICIPANTES ESPECIAIS: ");
+        for (Participante participantes : participantesEspeciais) {
+            System.out.println(participantes.getNome());
+        }
 
     }
 
