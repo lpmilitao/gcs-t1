@@ -126,8 +126,7 @@ public class Operacao {
         String nome = input.nextLine();
 
         Optional<Evento> evento = this.eventos.stream()
-                .filter(e -> e.getNomeEvento().equalsIgnoreCase(nome))
-                .findFirst();
+                .filter(e -> e.getNomeEvento().equalsIgnoreCase(nome)).findFirst();
 
         if (evento.isEmpty()) {
             System.out.println("Nenhum evento foi encontrado com o nome: " + nome);
@@ -140,7 +139,7 @@ public class Operacao {
     private void consultarEvento() {
         System.out.println("Digite o codigo do evento: ");
         int cod = input.nextInt();
-        input.nextLine(); //limpa
+        input.nextLine();
 
         Evento evento = getEventoById(cod);
         if (evento == null) {
@@ -161,7 +160,7 @@ public class Operacao {
             );
 
             opcao = input.nextInt();
-            input.nextLine(); //limpa
+            input.nextLine();
 
             switch (opcao) {
                 case 1:
@@ -210,12 +209,11 @@ public class Operacao {
 
     private void emitirIngresso() {
         int tipo, cod, capacidadeEspecial, capacidadeGeral;
-        long valorArredondadoCapacEsp;
-        String idIngresso;
+        long valorArredondadoCapacEsp; String idIngresso;
 
         System.out.println("Digite o codigo do evento: ");
         cod = input.nextInt();
-        input.nextLine(); //limpa
+        input.nextLine();
 
         Evento evento = getEventoById(cod);
         if (evento == null) {
@@ -227,7 +225,7 @@ public class Operacao {
                 "\n[1] - Publico Geral" +
                 "\n[2] - Condicoes Especiais");
         tipo = input.nextInt();
-        input.nextLine(); //limpa
+        input.nextLine();
 
         valorArredondadoCapacEsp = Math.round(evento.getQuantidadeTotalIngressos() * 0.15);
         capacidadeEspecial = (int) valorArredondadoCapacEsp;
@@ -236,7 +234,7 @@ public class Operacao {
         if (tipo == 2) {
             if (evento.getIngressosEspeciais().size() < capacidadeEspecial) {
                 int numero = capacidadeGeral + evento.getIngressosEspeciais().size() + 1;
-                idIngresso = evento.getCodigoUnico() + "-" + numero + "E"; //E no final de especial
+                idIngresso = evento.getCodigoUnico() + "-" + numero + "E";
 
                 System.out.println("Digite o nome do participante: ");
                 String nome = input.nextLine();
@@ -257,7 +255,7 @@ public class Operacao {
         } else {
             if (evento.getIngressosGeral().size() < capacidadeGeral) {
                 int numero = evento.getIngressosGeral().size() + 1;
-                idIngresso = evento.getCodigoUnico() + "-" + numero; // id juntando o cod unico com numero
+                idIngresso = evento.getCodigoUnico() + "-" + numero;
 
                 System.out.println("Digite o nome do participante: ");
                 String nome = input.nextLine();
@@ -346,7 +344,7 @@ public class Operacao {
 
                 if (!existe) {
                     System.out.println("Nenhum evento encotrado nesse mês!");
-                }
+                } else break;
             } else {
                 System.out.println("Erro: formato esperado: \"MM/yyyy\"");
             }
@@ -362,7 +360,7 @@ public class Operacao {
     private void cancelaEvento() {
         System.out.println("Digite o código do evento a ser cancelado: ");
         int cod = input.nextInt();
-        input.nextLine(); // Limpa o buffer do scanner
+        input.nextLine();
 
         Evento eventoParaCancelar = getEventoById(cod);
 
@@ -441,7 +439,6 @@ public class Operacao {
         participantes.add(new Participante("Ana Lech", "888.999.000-11"));
         participantes.add(new Participante("Vicenzo Másera", "999.000.111-22"));
         participantes.add(new Participante("Luiza Militão", "000.111.222-33"));
-
 
         for (Evento e : eventos) {
             for (int i = 0; i < participantes.size(); i++) {
