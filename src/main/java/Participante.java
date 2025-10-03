@@ -1,9 +1,8 @@
 import java.util.List;
 
 public class Participante {
-    public String nome;
-    public String cpf;
-
+    private String nome;
+    private String cpf;
 
     public Participante(String nome, String cpf) {
         this.nome = nome;
@@ -35,15 +34,11 @@ public class Participante {
         return false;
     }
 
-
-
     @Override
     public String toString() {
         return "Participante{" +
                 "nome='" + nome + '\'' +
                 ", cpf='" + cpf + '\'' +
                 '}';
-
-
     }
 }
