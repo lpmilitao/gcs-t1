@@ -93,6 +93,14 @@ public class Evento {
         return ingressosEspeciais;
     }
 
+    public void addIngresso(boolean isEspecial, Ingresso ingresso){
+        if(isEspecial){
+            this.ingressosEspeciais.add(ingresso);
+            return;
+        }
+        this.ingressosGeral.add(ingresso);
+    }
+
     @Override
     public String toString() {
         DateTimeFormatter br = DateTimeFormatter.ofPattern("dd/MM/yyyy");
